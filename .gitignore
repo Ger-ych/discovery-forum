@@ -1,0 +1,20 @@
+# Logs
+*.log
+
+# Editor directories and files
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Languages
+__pycache__/
+
+# Database
+db.sqlite3
+media/
