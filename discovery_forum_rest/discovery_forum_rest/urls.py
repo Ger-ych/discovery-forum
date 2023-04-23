@@ -17,13 +17,18 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 api_prefix = "api/v1/"
 
 urlpatterns = [
+    # Admin urls
     path('admin/', admin.site.urls),
-    path(f'{api_prefix}auth/', include('rest_framework.urls', namespace='rest_framework'))
+
+    # Rest auth urls
+    path(f'{api_prefix}auth/', include('djoser.urls')),
+    path(f'{api_prefix}auth/', include('djoser.urls.authtoken')
+),    
 ]
 if settings.DEBUG:
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
