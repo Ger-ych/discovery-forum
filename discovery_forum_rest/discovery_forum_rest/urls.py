@@ -19,9 +19,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+api_prefix = "api/v1/"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(f'{api_prefix}auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
