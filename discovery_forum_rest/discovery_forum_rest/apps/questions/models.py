@@ -36,6 +36,7 @@ class Question(models.Model):
         get_user_model(),
         related_name="followed_questions",
     )
+    date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True)
     
     def __str__(self):
         return self.heading
@@ -61,6 +62,7 @@ class QuestionComment(models.Model):
         null=True
     )
     text = models.CharField(verbose_name="Текст", max_length=512)
+    date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True)
 
     def __str__(self):
         return self.text
