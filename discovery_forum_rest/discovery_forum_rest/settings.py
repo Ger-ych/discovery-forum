@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'djoser',
 
     'questions',
+    'answers',
 ]
 
 MIDDLEWARE = [
