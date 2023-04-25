@@ -22,7 +22,7 @@ class QuestionCommentInline(admin.StackedInline):
 class QuestionAdmin(admin.ModelAdmin):
     inlines = (QuestionCommentInline, )
 
-    list_display = ("user", "heading", "category")
+    list_display = ("user", "heading", "category", "date_time")
 
     fieldsets = (
         (None, {'fields': ('user', 'date_time', 'category', 'following_users')}),
