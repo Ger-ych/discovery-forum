@@ -35,6 +35,7 @@ class Question(models.Model):
     following_users = models.ManyToManyField(
         get_user_model(),
         related_name="followed_questions",
+        verbose_name="Отслеживающие пользователи"
     )
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True)
     
