@@ -65,9 +65,9 @@ class AnswerComment(models.Model):
 # answer rate model
 class AnswerRate(models.Model):
     # answer rate choices
-    RATE_USEFUL = '2'
-    RATE_USELESS = '-1'
-    RATE_RELEVANT = '1'
+    RATE_USEFUL = 2
+    RATE_USELESS = -1
+    RATE_RELEVANT = 1
     RATE_CHOICES = [
         (RATE_USEFUL, 'Ответ полезен'),
         (RATE_USELESS, 'Бесполезный ответ'),
@@ -86,10 +86,10 @@ class AnswerRate(models.Model):
         verbose_name='Ответ',
         on_delete=models.CASCADE,
     )
-    rate = models.CharField(max_length=128, verbose_name='Оценка', choices=RATE_CHOICES)
+    rate = models.IntegerField(verbose_name='Оценка', choices=RATE_CHOICES)
 
     def __str__(self):
-        return self.rate
+        return self.get_rate_display()
 
     class Meta:
         verbose_name = 'Оценка ответа'
