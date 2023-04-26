@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
 from questions.models import Question
+from .utils import calc_answer_rating
 
 
 # answer model
@@ -23,6 +27,7 @@ class Answer(models.Model):
     text = models.TextField(verbose_name="Текст")
     is_solution = models.BooleanField(default=False, verbose_name="Решение вопроса")
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
+    rating = models.IntegerField(verbose_name='Рейтинг', default=0)
     
     def __str__(self):
         return self.heading
@@ -60,9 +65,9 @@ class AnswerComment(models.Model):
 # answer rate model
 class AnswerRate(models.Model):
     # answer rate choices
-    RATE_USEFUL = 2
-    RATE_USELESS = -1
-    RATE_RELEVANT = 1
+    RATE_USEFUL = '2'
+    RATE_USELESS = '-1'
+    RATE_RELEVANT = '1'
     RATE_CHOICES = [
         (RATE_USEFUL, 'Ответ полезен'),
         (RATE_USELESS, 'Бесполезный ответ'),
@@ -89,3 +94,12 @@ class AnswerRate(models.Model):
     class Meta:
         verbose_name = 'Оценка ответа'
         verbose_name_plural = 'Оценки ответов'
+
+# calculation of answer rating by rates
+@receiver(post_save, sender=AnswerRate)
+def answer_rating_save(sender, instance, created, **kwargs):
+    calc_answer_rating(instance.answer)
+
+@receiver(post_delete, sender=AnswerRate)
+def answer_rating_delete(sender, instance, **kwargs):
+    calc_answer_rating(instance.answer)

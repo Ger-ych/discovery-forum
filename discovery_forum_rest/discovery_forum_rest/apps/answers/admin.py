@@ -24,16 +24,16 @@ class AnswerRateInline(admin.StackedInline):
 class AnswerAdmin(admin.ModelAdmin):
     inlines = (AnswerCommentInline, AnswerRateInline )
 
-    list_display = ("user", "question", "heading", "is_solution", "date_time")
+    list_display = ("user", "question", "heading", "rating", "is_solution", "date_time")
 
     fieldsets = (
         (None, {'fields': ('user', 'question', 'date_time', 'is_solution')}),
         (None, {
-            'fields': ('heading', 'text'),
+            'fields': ('heading', 'text', 'rating'),
         }),
     )
 
-    readonly_fields = ("date_time", )
+    readonly_fields = ("date_time", "rating" )
 
     list_filter = ('user', 'question', 'is_solution')
 
