@@ -8,7 +8,7 @@ class QuestionCategoryAdmin(admin.ModelAdmin):
     list_display = ("name", )
     fields = ("name", )
 
-# adding an image inline to a product
+# adding question comment inline
 class QuestionCommentInline(admin.StackedInline):
     model = QuestionComment
     fields = ('user', 'text', 'date_time' )
