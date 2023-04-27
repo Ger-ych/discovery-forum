@@ -20,7 +20,8 @@ class Question(models.Model):
         related_name='questions',
         verbose_name='Пользователь',
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        blank=True
     )
     heading = models.CharField(verbose_name="Заголовок", max_length=255)
     text = models.TextField(verbose_name="Текст")
@@ -29,18 +30,20 @@ class Question(models.Model):
         related_name='questions',
         verbose_name='Категория',
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        blank=True
     )
-    keywords = models.TextField(verbose_name="Ключевые слова")
+    keywords = models.TextField(verbose_name="Ключевые слова", null=True, blank=True)
     following_users = models.ManyToManyField(
         get_user_model(),
         related_name="followed_questions",
-        verbose_name="Отслеживающие пользователи"
+        verbose_name="Отслеживающие пользователи",
+        blank=True
     )
-    date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True)
+    date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
     
     def __str__(self):
-        return self.heading
+        return f"Вопрос #{self.id}"
 
     class Meta:
         verbose_name = 'Вопрос'
@@ -53,17 +56,17 @@ class QuestionComment(models.Model):
         related_name='question_comments',
         verbose_name='Пользователь',
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        blank=True
     )
     question = models.ForeignKey(
         Question,
         related_name='comments',
-        verbose_name='Пользователь',
-        on_delete=models.SET_NULL,
-        null=True
+        verbose_name='Вопрос',
+        on_delete=models.CASCADE,
     )
     text = models.CharField(verbose_name="Текст", max_length=512)
-    date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True)
+    date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
 
     def __str__(self):
         return self.text
