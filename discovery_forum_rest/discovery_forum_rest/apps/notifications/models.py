@@ -12,7 +12,7 @@ class Notification(models.Model):
     )
     heading = models.CharField(verbose_name="Заголовок", max_length=255)
     text = models.TextField(verbose_name="Текст")
-    link = models.TextField(verbose_name="Ссылка")
+    link = models.TextField(verbose_name="Ссылка", null=True, blank=True)
     is_read = models.BooleanField(default=False, verbose_name="Прочитано")
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
     
