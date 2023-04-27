@@ -35,6 +35,6 @@ class AnswerAdmin(admin.ModelAdmin):
 
     readonly_fields = ("date_time", "rating" )
 
-    list_filter = ('user', 'is_solution')
+    list_filter = ('user', 'is_solution', 'date_time')
 
     save_on_top = True
