@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
     'questions',
     'answers',
+    'notifications'
 ]
 
 MIDDLEWARE = [
