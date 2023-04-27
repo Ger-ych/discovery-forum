@@ -33,6 +33,6 @@ class QuestionAdmin(admin.ModelAdmin):
 
     readonly_fields = ("date_time", )
 
-    list_filter = ('user', 'category')
+    list_filter = ('user', 'category', 'date_time')
 
     save_on_top = True
