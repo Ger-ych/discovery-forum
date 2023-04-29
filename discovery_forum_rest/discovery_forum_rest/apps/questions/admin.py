@@ -5,7 +5,7 @@ from .models import QuestionCategory, Question, QuestionComment
 # registration of question category model in administration
 @admin.register(QuestionCategory)
 class QuestionCategoryAdmin(admin.ModelAdmin):
-    list_display = ("name", )
+    list_display = ("id", "name", )
     fields = ("name", )
 
 # adding question comment inline
