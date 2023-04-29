@@ -87,6 +87,43 @@ TEMPLATES = [
 WSGI_APPLICATION = 'discovery_forum_rest.wsgi.application'
 
 
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'file_console': {
+            'format': '\n\n%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'file_console'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'file_console',
+            'filename': 'debug.log'
+        }
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file', ]
+        },
+        'django': {
+            'level': 'INFO',
+            'handlers': ['console', 'file', ],
+            'propagate': True,
+        },
+    }
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
