@@ -1,0 +1,7 @@
+from django.urls import path
+from .views import *
+
+app_name = "questions"
+urlpatterns = [
+    path('categories/list/', QuestionCategoryListView.as_view()),
+]
