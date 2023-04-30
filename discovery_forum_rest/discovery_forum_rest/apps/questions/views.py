@@ -22,13 +22,13 @@ class QuestionListView(generics.ListAPIView):
     def get_queryset(self):
         category_id = self.request.GET.get("category_id")
         query = self.request.GET.get("q")
-        keywords = self.request.GET.get("keywords")
 
         questions = Question.objects.order_by('-date_time')
 
         if category_id:
             questions = questions.filter(category=get_object_or_404(QuestionCategory, id=category_id))
-
-        # TODO searching questions by query and keywords
         
+        if query:
+            questions = questions.filter(heading__icontains=query)
+
         return questions
