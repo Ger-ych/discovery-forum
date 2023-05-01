@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, response
 
 from .models import QuestionCategory, Question
 from .serializers import QuestionCategoryListSerializer, QuestionListSerializer
@@ -32,3 +33,23 @@ class QuestionListView(generics.ListAPIView):
             questions = questions.filter(heading__icontains=query)
 
         return questions
+
+# list of user questions
+class UserQuestionListView(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny, )
+    serializer_class = QuestionListSerializer
+    http_method_names = ['get', ]
+
+    def get_queryset(self):
+        username = self.request.GET.get("username")
+        request = self.request
+
+        if username:
+            questions = Question.objects.filter(user=get_object_or_404(get_user_model(), username=username)).order_by('-date_time')
+        elif request.user.is_authenticated:
+            questions = Question.objects.filter(user=request.user).order_by('-date_time')
+        else:
+            return response.Response(status=401)
+
+        return questions
+
