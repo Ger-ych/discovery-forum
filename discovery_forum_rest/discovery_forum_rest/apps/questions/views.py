@@ -3,8 +3,8 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import generics, permissions, response
 
-from .models import QuestionCategory, Question
-from .serializers import QuestionCategoryListSerializer, QuestionListSerializer
+from .models import QuestionCategory, Question, QuestionComment
+from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer
 
 
 # list of question categories
@@ -53,3 +53,15 @@ class UserQuestionListView(generics.ListAPIView):
 
         return questions
 
+
+# list of question comments
+class QuestionCommentListView(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny, )
+    serializer_class = QuestionCommentListSerializer
+    http_method_names = ['get', ]
+
+    def get_queryset(self):
+        question_id = self.request.GET.get("question_id")
+        comments = QuestionComment.objects.filter(question=get_object_or_404(Question, id=question_id)).order_by('-date_time')
+
+        return comments
