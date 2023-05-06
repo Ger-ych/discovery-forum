@@ -50,3 +50,28 @@ class QuestionCommentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionComment
         fields = ('id', 'username', 'text', 'correct_date_time')
+
+# question category list serializer
+class QuestionDetailSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    category_name = serializers.SerializerMethodField()
+    correct_date_time = serializers.SerializerMethodField()
+    
+    def get_username(self, obj):
+        if obj.user:
+            return obj.user.username
+        else:
+            return None
+    
+    def get_category_name(self, obj):
+        if obj.category:
+            return obj.category.name
+        else:
+            return None
+    
+    def get_correct_date_time(self, obj):
+        return obj.date_time.strftime("%m/%d/%Y %H:%M:%S")
+
+    class Meta:
+        model = Question
+        fields = ('id', 'username', 'heading', 'text', 'category_name', 'keywords', 'correct_date_time')

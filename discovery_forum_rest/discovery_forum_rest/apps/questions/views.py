@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, response
 
 from .models import QuestionCategory, Question, QuestionComment
-from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer
+from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer
 
 
 # list of question categories
@@ -65,3 +65,10 @@ class QuestionCommentListView(generics.ListAPIView):
         comments = QuestionComment.objects.filter(question=get_object_or_404(Question, id=question_id)).order_by('-date_time')
 
         return comments
+
+# question detail
+class QuestionDetailView(generics.RetrieveAPIView):
+    permission_classes = (permissions.AllowAny, )
+    queryset = Question.objects.all()
+    serializer_class = QuestionDetailSerializer
+    lookup_field = 'id'
