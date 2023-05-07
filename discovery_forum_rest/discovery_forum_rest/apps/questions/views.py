@@ -5,7 +5,7 @@ from rest_framework import generics, permissions, response
 
 from .models import QuestionCategory, Question, QuestionComment
 from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer
-
+from .permissions import IsOwner
 
 # list of question categories
 class QuestionCategoryListView(generics.ListAPIView):
@@ -67,8 +67,13 @@ class QuestionCommentListView(generics.ListAPIView):
         return comments
 
 # question detail
-class QuestionDetailView(generics.RetrieveAPIView):
+class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny, )
     queryset = Question.objects.all()
     serializer_class = QuestionDetailSerializer
     lookup_field = 'id'
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'DELETE']:
+            self.permission_classes = [IsOwner]
+        return super().get_permissions()
