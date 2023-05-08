@@ -11,4 +11,5 @@ urlpatterns = [
     path('create/', QuestionCreateView.as_view()),
 
     path('comments/list/', QuestionCommentListView.as_view()),
+    path('comments/create/', QuestionCommentCreateView.as_view()),
 ]

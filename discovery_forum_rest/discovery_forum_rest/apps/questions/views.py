@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, response
 
 from .models import QuestionCategory, Question, QuestionComment
-from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer, QuestionCreateSerializer
+from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer, QuestionCreateSerializer, QuestionCommentCreateSerializer
 from .permissions import IsOwner
 
 # list of question categories
@@ -66,6 +66,15 @@ class QuestionCommentListView(generics.ListAPIView):
 
         return comments
 
+# question create
+class QuestionCreateView(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = QuestionCreateSerializer
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)
+
 # question detail
 class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny, )
@@ -78,10 +87,10 @@ class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
             self.permission_classes = [IsOwner]
         return super().get_permissions()
 
-# question create
-class QuestionCreateView(generics.CreateAPIView):
+# question comment create
+class QuestionCommentCreateView(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = QuestionCreateSerializer
+    serializer_class = QuestionCommentCreateSerializer
 
     def perform_create(self, serializer):
         user = self.request.user

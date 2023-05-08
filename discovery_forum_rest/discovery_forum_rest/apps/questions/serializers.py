@@ -81,3 +81,10 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('heading', 'text', 'category', 'keywords')
+
+# question create serializer
+class QuestionCommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionComment
+        fields = ('question', 'text')
+
