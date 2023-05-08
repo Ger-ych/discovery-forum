@@ -51,6 +51,12 @@ class QuestionCommentListSerializer(serializers.ModelSerializer):
         model = QuestionComment
         fields = ('id', 'username', 'text', 'correct_date_time')
 
+# question create serializer
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('heading', 'text', 'category', 'keywords')
+
 # question detail serializer
 class QuestionDetailSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
@@ -75,12 +81,9 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'username', 'heading', 'text', 'category_name', 'category', 'keywords', 'correct_date_time')
-
-# question create serializer
-class QuestionCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = ('heading', 'text', 'category', 'keywords')
+        
+        read_only_fields = ('id', 'username', 'category_name', 'correct_date_time')
+        read_write_fields = ('heading', 'text', 'category', 'keywords')
 
 # question create serializer
 class QuestionCommentCreateSerializer(serializers.ModelSerializer):

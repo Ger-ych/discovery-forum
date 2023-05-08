@@ -4,8 +4,16 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, response
 
 from .models import QuestionCategory, Question, QuestionComment
-from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer, QuestionCreateSerializer, QuestionCommentCreateSerializer
+from .serializers import (
+    QuestionCategoryListSerializer, 
+    QuestionListSerializer, 
+    QuestionCommentListSerializer, 
+    QuestionDetailSerializer, 
+    QuestionCreateSerializer, 
+    QuestionCommentCreateSerializer, 
+)
 from .permissions import IsOwner
+
 
 # list of question categories
 class QuestionCategoryListView(generics.ListAPIView):
