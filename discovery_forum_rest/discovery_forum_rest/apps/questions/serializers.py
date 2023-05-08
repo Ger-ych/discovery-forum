@@ -8,7 +8,7 @@ class QuestionCategoryListSerializer(serializers.ModelSerializer):
         model = QuestionCategory
         fields = ('id', 'name')
 
-# question category list serializer
+# question list serializer
 class QuestionListSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     category_name = serializers.SerializerMethodField()
@@ -33,7 +33,7 @@ class QuestionListSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'username', 'heading', 'category_name', 'correct_date_time')
 
-# question category list serializer
+# question comment list serializer
 class QuestionCommentListSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     correct_date_time = serializers.SerializerMethodField()
@@ -51,7 +51,7 @@ class QuestionCommentListSerializer(serializers.ModelSerializer):
         model = QuestionComment
         fields = ('id', 'username', 'text', 'correct_date_time')
 
-# question category list serializer
+# question detail serializer
 class QuestionDetailSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     category_name = serializers.SerializerMethodField()
@@ -75,3 +75,9 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'username', 'heading', 'text', 'category_name', 'category', 'keywords', 'correct_date_time')
+
+# question create serializer
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('heading', 'text', 'category', 'keywords')

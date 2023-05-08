@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, response
 
 from .models import QuestionCategory, Question, QuestionComment
-from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer
+from .serializers import QuestionCategoryListSerializer, QuestionListSerializer, QuestionCommentListSerializer, QuestionDetailSerializer, QuestionCreateSerializer
 from .permissions import IsOwner
 
 # list of question categories
@@ -77,3 +77,12 @@ class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'DELETE']:
             self.permission_classes = [IsOwner]
         return super().get_permissions()
+
+# question create
+class QuestionCreateView(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = QuestionCreateSerializer
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)

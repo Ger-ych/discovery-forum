@@ -43,7 +43,7 @@ class Question(models.Model):
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
     
     def __str__(self):
-        return f"Вопрос #{self.id}"
+        return f"Вопрос #{self.id}"  # type: ignore
 
     class Meta:
         verbose_name = 'Вопрос'
