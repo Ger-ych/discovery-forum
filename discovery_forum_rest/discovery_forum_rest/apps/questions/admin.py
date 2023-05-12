@@ -6,7 +6,8 @@ from .models import QuestionCategory, Question, QuestionComment
 @admin.register(QuestionCategory)
 class QuestionCategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", )
-    fields = ("name", )
+    fields = ("id", "name", )
+    readonly_fields = ('id', )
 
 # adding question comment inline
 class QuestionCommentInline(admin.StackedInline):
@@ -25,13 +26,13 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "heading", "category", "date_time")
 
     fieldsets = (
-        (None, {'fields': ('user', 'date_time', 'category', 'following_users')}),
+        (None, {'fields': ('id', 'user', 'date_time', 'category', 'following_users')}),
         (None, {
             'fields': ('heading', 'text', 'keywords'),
         }),
     )
 
-    readonly_fields = ("date_time", )
+    readonly_fields = ('id', "date_time", )
 
     list_filter = ('user', 'category', 'date_time')
 

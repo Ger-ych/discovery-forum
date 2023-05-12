@@ -27,13 +27,13 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "question", "heading", "rating", "is_solution", "date_time")
 
     fieldsets = (
-        (None, {'fields': ('user', 'question', 'date_time', 'is_solution')}),
+        (None, {'fields': ('id', 'user', 'question', 'date_time', 'is_solution')}),
         (None, {
             'fields': ('heading', 'text', 'rating'),
         }),
     )
 
-    readonly_fields = ("date_time", "rating" )
+    readonly_fields = ('id', "date_time", "rating" )
 
     list_filter = ('user', 'is_solution', 'date_time')
 

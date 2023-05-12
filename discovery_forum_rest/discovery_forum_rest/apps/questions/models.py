@@ -69,7 +69,7 @@ class QuestionComment(models.Model):
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
 
     def __str__(self):
-        return self.text
+        return f"Комментарий #{self.id}" # type: ignore
 
     class Meta:
         verbose_name = 'Комментарий к вопросу'
