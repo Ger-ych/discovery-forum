@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
-from rest_framework import generics, permissions, response
+from rest_framework import generics, permissions, response, status
 
 from .models import QuestionCategory, Question, QuestionComment
 from .serializers import (
@@ -58,9 +58,17 @@ class UserQuestionListView(generics.ListAPIView):
         elif request.user.is_authenticated:
             questions = Question.objects.filter(user=request.user).order_by('-date_time')
         else:
-            return response.Response(status=401)
+            return None
 
         return questions
+
+    def list(self, request, *args, **kwargs):
+        # authorization check
+        queryset = self.get_queryset()
+        if queryset is None:
+            return response.Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = self.get_serializer(queryset, many=True)
+        return response.Response(serializer.data)
 
 
 # list of question comments
