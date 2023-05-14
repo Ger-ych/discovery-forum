@@ -9,6 +9,7 @@ urlpatterns = [
     path('list/user/', UserQuestionListView.as_view()),
     path('detail/<int:id>/', QuestionDetailView.as_view()),
     path('create/', QuestionCreateView.as_view()),
+    path('follow/', QuestionFollowView.as_view()),
 
     path('comments/list/', QuestionCommentListView.as_view()),
     path('comments/create/', QuestionCommentCreateView.as_view()),

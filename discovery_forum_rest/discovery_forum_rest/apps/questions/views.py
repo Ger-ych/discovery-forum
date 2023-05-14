@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
-from rest_framework import generics, permissions, response, status
+from rest_framework import generics, permissions, response, status, views
 
 from .models import QuestionCategory, Question, QuestionComment
 from .serializers import (
@@ -20,14 +20,12 @@ from .permissions import IsOwner
 class QuestionCategoryListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = QuestionCategoryListSerializer
-    queryset = QuestionCategory.objects.all()
-    http_method_names = ['get', ]
+    queryset = QuestionCategory.objects.all() 
 
 # list of questions
 class QuestionListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = QuestionListSerializer
-    http_method_names = ['get', ]
 
     def get_queryset(self):
         category_id = self.request.GET.get("category_id")
@@ -47,14 +45,14 @@ class QuestionListView(generics.ListAPIView):
 class UserQuestionListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = QuestionListSerializer
-    http_method_names = ['get', ]
 
     def get_queryset(self):
         username = self.request.GET.get("username")
         request = self.request
 
         if username:
-            questions = Question.objects.filter(user=get_object_or_404(get_user_model(), username=username)).order_by('-date_time')
+            user = get_object_or_404(get_user_model(), username=username)
+            questions = Question.objects.filter(user=user).order_by('-date_time')
         elif request.user.is_authenticated:
             questions = Question.objects.filter(user=request.user).order_by('-date_time')
         else:
@@ -75,11 +73,11 @@ class UserQuestionListView(generics.ListAPIView):
 class QuestionCommentListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = QuestionCommentListSerializer
-    http_method_names = ['get', ]
 
     def get_queryset(self):
         question_id = self.request.GET.get("question_id")
-        comments = QuestionComment.objects.filter(question=get_object_or_404(Question, id=question_id)).order_by('-date_time')
+        question = get_object_or_404(Question, id=question_id)
+        comments = QuestionComment.objects.filter(question=question).order_by('-date_time')
 
         return comments
 
@@ -124,3 +122,23 @@ class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'DELETE']:
             self.permission_classes = [IsOwner]
         return super().get_permissions()
+
+# question follow view
+class QuestionFollowView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    http_method_names = ['post']
+
+    def post(self, request):
+        question_id = request.data.get('question_id')
+        question = get_object_or_404(Question, id=question_id)
+        user = request.user
+
+        if user == question.user:
+            return response.Response({'detail': 'Нельзя отслеживать свой же вопрос.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user.followed_questions.filter(id=question.id).exists():
+            user.followed_questions.remove(question)
+            return response.Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            user.followed_questions.add(question)
+            return response.Response(status=status.HTTP_201_CREATED)
