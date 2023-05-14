@@ -91,3 +91,23 @@ class QuestionCommentCreateSerializer(serializers.ModelSerializer):
         model = QuestionComment
         fields = ('question', 'text')
 
+# question comment detail serializer
+class QuestionCommentDetailSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    correct_date_time = serializers.SerializerMethodField()
+    
+    def get_username(self, obj):
+        if obj.user:
+            return obj.user.username
+        else:
+            return None
+    
+    def get_correct_date_time(self, obj):
+        return obj.date_time.strftime("%m/%d/%Y %H:%M:%S")
+
+    class Meta:
+        model = QuestionComment
+        fields = ('id', 'username', 'question', 'text', 'correct_date_time')
+        
+        read_only_fields = ('id', 'username', 'question', 'correct_date_time')
+        read_write_fields = ('text',)

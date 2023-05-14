@@ -11,6 +11,7 @@ from .serializers import (
     QuestionDetailSerializer, 
     QuestionCreateSerializer, 
     QuestionCommentCreateSerializer, 
+    QuestionCommentDetailSerializer
 )
 from .permissions import IsOwner
 
@@ -103,3 +104,15 @@ class QuestionCommentCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         serializer.save(user=user)
+
+# question comment detail
+class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny, )
+    queryset = QuestionComment.objects.all()
+    serializer_class = QuestionCommentDetailSerializer
+    lookup_field = 'id'
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'DELETE']:
+            self.permission_classes = [IsOwner]
+        return super().get_permissions()
