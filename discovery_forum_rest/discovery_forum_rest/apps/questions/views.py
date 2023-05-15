@@ -20,7 +20,7 @@ from .permissions import IsOwner
 class QuestionCategoryListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = QuestionCategoryListSerializer
-    queryset = QuestionCategory.objects.all() 
+    queryset = QuestionCategory.objects.all().order_by('name')
 
 # list of questions
 class QuestionListView(generics.ListAPIView):
@@ -67,7 +67,6 @@ class UserQuestionListView(generics.ListAPIView):
             return response.Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = self.get_serializer(queryset, many=True)
         return response.Response(serializer.data)
-
 
 # list of question comments
 class QuestionCommentListView(generics.ListAPIView):
@@ -136,7 +135,7 @@ class QuestionFollowView(views.APIView):
         if user == question.user:
             return response.Response({'detail': 'Нельзя отслеживать свой же вопрос.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user.followed_questions.filter(id=question.id).exists():
+        if user.followed_questions.filter(id=question.id).exists(): # # type: ignore
             user.followed_questions.remove(question)
             return response.Response(status=status.HTTP_204_NO_CONTENT)
         else:
