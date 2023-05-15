@@ -27,8 +27,9 @@ urlpatterns = [
 
     # Rest auth urls
     path(f'{api_prefix}auth/', include('djoser.urls')),
-    path(f'{api_prefix}auth/', include('djoser.urls.authtoken')
-),    
+    path(f'{api_prefix}auth/', include('djoser.urls.authtoken')),
+            
+    path(f'{api_prefix}questions/', include('questions.urls')),    
 ]
 if settings.DEBUG:
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

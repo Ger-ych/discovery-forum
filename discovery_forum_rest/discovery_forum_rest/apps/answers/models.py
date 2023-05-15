@@ -30,7 +30,7 @@ class Answer(models.Model):
     rating = models.IntegerField(verbose_name='Рейтинг', default=0)
     
     def __str__(self):
-        return self.heading
+        return f"Ответ #{self.id}" # type: ignore
 
     class Meta:
         verbose_name = 'Ответ'
@@ -56,7 +56,7 @@ class AnswerComment(models.Model):
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
 
     def __str__(self):
-        return self.text
+        return f"Комментарий #{self.id}" # type: ignore
 
     class Meta:
         verbose_name = 'Комментарий к ответу'
@@ -89,7 +89,7 @@ class AnswerRate(models.Model):
     rate = models.IntegerField(verbose_name='Оценка', choices=RATE_CHOICES)
 
     def __str__(self):
-        return self.get_rate_display()
+        return self.get_rate_display() # type: ignore
 
     class Meta:
         verbose_name = 'Оценка ответа'
