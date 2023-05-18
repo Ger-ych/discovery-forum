@@ -31,7 +31,7 @@ class QuestionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'username', 'heading', 'category_name', 'correct_date_time')
+        fields = ('id', 'username', 'heading', 'category_name', 'category', 'correct_date_time')
 
 # question comment list serializer
 class QuestionCommentListSerializer(serializers.ModelSerializer):
