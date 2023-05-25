@@ -135,7 +135,7 @@ class QuestionFollowView(views.APIView):
         if user == question.user:
             return response.Response({'detail': 'Нельзя отслеживать свой же вопрос.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user.followed_questions.filter(id=question.id).exists(): # # type: ignore
+        if user.followed_questions.filter(id=question.id).exists(): # type: ignore
             user.followed_questions.remove(question)
             return response.Response(status=status.HTTP_204_NO_CONTENT)
         else:

@@ -10,7 +10,7 @@ from .models import Answer
 from .serializers import AnswerListSerializer
 
 
-# list of question comments
+# list of answers
 class AnswerListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = AnswerListSerializer
