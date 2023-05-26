@@ -27,12 +27,12 @@ SECRET_KEY = 'django-insecure-6qcc0az!s38ir#&df*1#(tf9ppmo5+qtgehgy0d$#oadg2x$&j
 
 # SECURITY WARNING: don't run with debug turned on in production!
 try:
-    DEBUG = os.environ['DEBUG']
+    DEBUG = os.environ['DEBUG'] # в некоторых случаях может возникнуть проблемы, лучше использовать os.environ.get('<переменная_окружения_нейм>')
 except KeyError:
     DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []  # лучше тоже вынести в переменные окружения
 
 
 # Application definition
