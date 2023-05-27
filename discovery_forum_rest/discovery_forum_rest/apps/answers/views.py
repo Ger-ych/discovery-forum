@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from django.db.models import Case, When, BooleanField, Value
+from django.db.models import Case, When, BooleanField
 
 from rest_framework import generics, permissions, response, status, views
 
@@ -18,9 +18,25 @@ class AnswerListView(generics.ListAPIView):
     def get_queryset(self):
         question_id = self.request.GET.get("question_id")
         question = get_object_or_404(Question, id=question_id)
-        answers = Answer.objects.filter(question=question).order_by(
-            '-is_solution',
-            '-rating'
-        )
+
+        if self.request.user.is_authenticated:
+            answers = Answer.objects.annotate(
+                is_owner=Case(
+                When(user=self.request.user, then=True),
+                default=False,
+                output_field=BooleanField(),
+                )
+            )
+
+            answers = answers.filter(question=question).order_by(
+                '-is_owner',
+                '-is_solution',
+                '-rating'
+            )
+        else:
+            answers = Answer.objects.filter(question=question).order_by(
+                '-is_solution',
+                '-rating'
+            )
 
         return answers
