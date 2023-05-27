@@ -27,12 +27,12 @@ SECRET_KEY = 'django-insecure-6qcc0az!s38ir#&df*1#(tf9ppmo5+qtgehgy0d$#oadg2x$&j
 
 # SECURITY WARNING: don't run with debug turned on in production!
 try:
-    DEBUG = os.environ['DEBUG'] # в некоторых случаях может возникнуть проблемы, лучше использовать os.environ.get('<переменная_окружения_нейм>')
+    DEBUG = os.environ.get('DEBUG')
 except KeyError:
     DEBUG = True
 
 
-ALLOWED_HOSTS = []  # лучше тоже вынести в переменные окружения
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -138,9 +138,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['POSTGRES_DB'], 'USER': os.environ['POSTGRES_USER'],
-            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-            'HOST': os.environ['POSTGRES_HOST'], 'PORT': os.environ['POSTGRES_PORT'],
+            'NAME': os.environ.get('POSTGRES_DB'), 'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'), 'PORT': os.environ.get('POSTGRES_PORT'),
         }
     }
 
