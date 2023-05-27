@@ -6,8 +6,8 @@ from rest_framework import generics, permissions, response, status, views
 
 from questions.models import Question
 
-from .models import Answer
-from .serializers import AnswerListSerializer
+from .models import Answer, AnswerComment
+from .serializers import AnswerListSerializer, AnswerCommentListSerializer
 
 
 # list of answers
@@ -40,3 +40,15 @@ class AnswerListView(generics.ListAPIView):
             )
 
         return answers
+
+# list of answer comments
+class AnswerCommentListView(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny, )
+    serializer_class = AnswerCommentListSerializer
+
+    def get_queryset(self):
+        answer_id = self.request.GET.get("answer_id")
+        answer = get_object_or_404(Answer, id=answer_id)
+        comments = AnswerComment.objects.filter(answer=answer).order_by('-date_time')
+
+        return comments
