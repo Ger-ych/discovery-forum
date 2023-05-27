@@ -7,7 +7,7 @@ name = "pypi"
 django = "==4.2.1"
 djangorestframework = "==3.14.0"
 djoser = "==2.2.0"
-psycopg2 = "==2.9.3"
+psycopg2 = "==2.9.3"  # лучше вынести psycopg2 в дев пакеты, а для продакшна использовать psycopg2-binary, потому что именно psycopg2 не сможет собраться под линкус
 
 [dev-packages]
 
