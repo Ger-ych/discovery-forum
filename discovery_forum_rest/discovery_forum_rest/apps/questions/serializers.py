@@ -53,9 +53,24 @@ class QuestionCommentListSerializer(serializers.ModelSerializer):
 
 # question create serializer
 class QuestionCreateSerializer(serializers.ModelSerializer):
+    category_name = serializers.SerializerMethodField()
+    correct_date_time = serializers.SerializerMethodField()
+
+    def get_category_name(self, obj):
+        if obj.category:
+            return obj.category.name
+        else:
+            return None
+    
+    def get_correct_date_time(self, obj):
+        return obj.date_time.strftime("%m/%d/%Y %H:%M:%S")
+
     class Meta:
-        model = Question
-        fields = ('heading', 'text', 'category', 'keywords')
+        model = Question        
+        fields = ('id', 'heading', 'text', 'category_name', 'category', 'keywords', 'correct_date_time')
+
+        read_only_fields = ('id', 'category_name', 'correct_date_time')
+        read_write_fields = ('heading', 'text', 'category', 'keywords')
 
 # question detail serializer
 class QuestionDetailSerializer(serializers.ModelSerializer):
@@ -87,9 +102,17 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
 
 # question create serializer
 class QuestionCommentCreateSerializer(serializers.ModelSerializer):
+    correct_date_time = serializers.SerializerMethodField()
+
+    def get_correct_date_time(self, obj):
+        return obj.date_time.strftime("%m/%d/%Y %H:%M:%S")
+
     class Meta:
         model = QuestionComment
-        fields = ('question', 'text')
+        fields = ('id', 'question', 'text', 'correct_date_time')
+        
+        read_only_fields = ('id', 'correct_date_time')
+        read_write_fields = ('question', 'text')
 
 # question comment detail serializer
 class QuestionCommentDetailSerializer(serializers.ModelSerializer):
