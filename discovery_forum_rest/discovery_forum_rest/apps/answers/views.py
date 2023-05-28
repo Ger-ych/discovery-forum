@@ -7,8 +7,12 @@ from rest_framework import generics, permissions, response, status, views
 from questions.models import Question
 
 from .models import Answer, AnswerComment
-from .serializers import AnswerListSerializer, AnswerCommentListSerializer
-
+from .serializers import (
+    AnswerListSerializer, 
+    AnswerCommentListSerializer, 
+    AnswerCreateSerializer
+)
+from questions.permissions import IsOwner
 
 # list of answers
 class AnswerListView(generics.ListAPIView):
@@ -52,3 +56,12 @@ class AnswerCommentListView(generics.ListAPIView):
         comments = AnswerComment.objects.filter(answer=answer).order_by('-date_time')
 
         return comments
+
+# answer create
+class AnswerCreateView(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = AnswerCreateSerializer
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)

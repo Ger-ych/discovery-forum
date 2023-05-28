@@ -37,3 +37,17 @@ class AnswerCommentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerComment
         fields = ('id', 'username', 'text', 'correct_date_time')
+
+# answer create serializer
+class AnswerCreateSerializer(serializers.ModelSerializer):
+    correct_date_time = serializers.SerializerMethodField()
+    
+    def get_correct_date_time(self, obj):
+        return obj.date_time.strftime("%m/%d/%Y %H:%M:%S")
+
+    class Meta:
+        model = Answer
+        fields = ('id', 'question', 'heading', 'text', 'correct_date_time')
+        
+        read_only_fields = ('id', 'correct_date_time')
+        read_write_fields = ('question', 'heading', 'text')
