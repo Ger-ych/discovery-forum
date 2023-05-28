@@ -58,3 +58,24 @@ class AnswerCreateSerializer(serializers.ModelSerializer):
         
         read_only_fields = ('id', 'username', 'is_solution', 'correct_date_time')
         read_write_fields = ('question', 'heading', 'text')
+
+# answer detail serializer
+class AnswerDetailSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    correct_date_time = serializers.SerializerMethodField()
+
+    def get_username(self, obj):
+        if obj.user:
+            return obj.user.username
+        else:
+            return None
+    
+    def get_correct_date_time(self, obj):
+        return obj.date_time.strftime("%m/%d/%Y %H:%M:%S")
+
+    class Meta:
+        model = Answer
+        fields = ('id', 'username', 'question', 'heading', 'text', 'is_solution', 'correct_date_time')
+        
+        read_only_fields = ('id', 'username', 'question', 'is_solution', 'correct_date_time')
+        read_write_fields = ('heading', 'text')

@@ -10,7 +10,8 @@ from .models import Answer, AnswerComment
 from .serializers import (
     AnswerListSerializer, 
     AnswerCommentListSerializer, 
-    AnswerCreateSerializer
+    AnswerCreateSerializer,
+    AnswerDetailSerializer
 )
 from questions.permissions import IsOwner
 
@@ -65,3 +66,15 @@ class AnswerCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         serializer.save(user=user)
+
+# answer create
+class AnswerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny, )
+    queryset = Answer.objects.all()
+    serializer_class = AnswerDetailSerializer
+    lookup_field = 'id'
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'DELETE']:
+            self.permission_classes = [IsOwner]
+        return super().get_permissions()
