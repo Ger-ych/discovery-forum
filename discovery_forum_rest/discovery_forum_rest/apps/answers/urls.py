@@ -8,4 +8,5 @@ urlpatterns = [
     path('detail/<int:id>/', AnswerDetailView.as_view(), name='answer_detail'),
 
     path('comments/list/', AnswerCommentListView.as_view(), name='comment_list'),
+    path('comments/create/', AnswerCommentCreateView.as_view(), name='comment_create'),
 ]

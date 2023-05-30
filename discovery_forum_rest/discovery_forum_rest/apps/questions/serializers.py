@@ -107,7 +107,7 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'username', 'category_name', 'correct_date_time')
         read_write_fields = ('heading', 'text', 'category', 'keywords')
 
-# question create serializer
+# question comment create serializer
 class QuestionCommentCreateSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     correct_date_time = serializers.SerializerMethodField()
