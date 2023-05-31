@@ -122,7 +122,7 @@ class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
             self.permission_classes = [IsOwner]
         return super().get_permissions()
 
-# question follow view
+# question follow
 class QuestionFollowView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     http_method_names = ['post']

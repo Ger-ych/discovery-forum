@@ -101,3 +101,27 @@ class AnswerCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'DELETE']:
             self.permission_classes = [IsOwner]
         return super().get_permissions()
+
+# answer set solution
+class AnswerSetSolutionView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    http_method_names = ['post']
+
+    def post(self, request):
+        answer_id = request.data.get('answer_id')
+        answer = get_object_or_404(Answer, id=answer_id)
+        question = answer.question
+
+        user = request.user     
+
+        if user != question.user:
+            return response.Response(status=status.HTTP_403_FORBIDDEN)
+
+        if answer.is_solution:
+            answer.is_solution = False
+        else:
+            answer.is_solution = True
+
+        answer.save()
+
+        return response.Response(data={"is_solution": answer.is_solution}, status=status.HTTP_200_OK)
