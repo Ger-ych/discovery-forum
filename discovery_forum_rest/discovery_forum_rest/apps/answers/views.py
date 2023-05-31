@@ -6,7 +6,7 @@ from rest_framework import generics, permissions, response, status, views
 
 from questions.models import Question
 
-from .models import Answer, AnswerComment
+from .models import Answer, AnswerComment, AnswerRate
 from .serializers import (
     AnswerListSerializer, 
     AnswerCommentListSerializer, 
@@ -125,3 +125,11 @@ class AnswerSetSolutionView(views.APIView):
         answer.save()
 
         return response.Response(data={"is_solution": answer.is_solution}, status=status.HTTP_200_OK)
+
+# answer rate list
+class AnswerRateListView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+    http_method_names = ['get']
+
+    def get(self, request):
+        return response.Response(data=AnswerRate.RATE_CHOICES, status=status.HTTP_200_OK)
