@@ -13,7 +13,8 @@ from .serializers import (
     AnswerCreateSerializer,
     AnswerDetailSerializer, 
     AnswerCommentCreateSerializer, 
-    AnswerCommentDetailSerializer
+    AnswerCommentDetailSerializer,
+    UserAnswerRateSerializer
 )
 from questions.permissions import IsOwner
 
@@ -133,3 +134,45 @@ class AnswerRateListView(views.APIView):
 
     def get(self, request):
         return response.Response(data=AnswerRate.RATE_CHOICES, status=status.HTTP_200_OK)
+
+# user answer rate
+class UserAnswerRateView(generics.RetrieveAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserAnswerRateSerializer
+
+    def get_object(self):
+        user = self.request.user
+
+        answer_id = self.request.GET.get('answer')
+        answer = get_object_or_404(Answer, id=answer_id)
+        
+        return get_object_or_404(AnswerRate, user=user, answer=answer)
+
+# answer rate create
+class AnswerRateCreateView(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+
+        rate = int(request.data.get('rate'))
+        valid_rates = [x[0] for x in AnswerRate.RATE_CHOICES]
+        if not rate in valid_rates:
+            return response.Response(data={"rate": [f"Недопустисое значение \"{rate}\"."]}, status=status.HTTP_400_BAD_REQUEST)
+
+        answer_id = request.data.get('answer')
+        answer = get_object_or_404(Answer, id=answer_id)
+        
+        if AnswerRate.objects.filter(answer=answer, user=user).exists():
+            answer_rate = AnswerRate.objects.filter(answer=answer, user=user).first()
+            if answer_rate.rate == rate:
+                answer_rate.delete()
+                return response.Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                answer_rate.rate = rate
+                answer_rate.save()
+                return response.Response(status=status.HTTP_200_OK)
+        else:
+            AnswerRate.objects.create(answer=answer, user=user, rate=rate)
+            return response.Response(status=status.HTTP_201_CREATED)
+

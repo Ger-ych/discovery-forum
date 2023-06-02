@@ -13,4 +13,6 @@ urlpatterns = [
     path('comments/detail/<int:id>/', AnswerCommentDetailView.as_view(), name='comment_detail'),
 
     path('rates/list/', AnswerRateListView.as_view(), name='rate_list'),
+    path('rates/create/', AnswerRateCreateView.as_view(), name='rate_create'),
+    path('rates/user/', UserAnswerRateView.as_view(), name='rate_user'),
 ]

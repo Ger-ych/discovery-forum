@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Answer, AnswerComment
+from .models import Answer, AnswerComment, AnswerRate
 
 
 # answer list serializer
@@ -122,3 +122,9 @@ class AnswerCommentDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'answer', 'username', 'correct_date_time')
         read_write_fields = ('text')
 
+# user answer rate serializer
+class UserAnswerRateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnswerRate
+        fields = ('rate',)
+  
