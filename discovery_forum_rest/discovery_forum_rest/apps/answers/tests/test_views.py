@@ -343,3 +343,56 @@ class UserAnswerRateViewTest(APITestCase):
         response = self.client.get(self.url, {'answer_id': self.answer.id}) # type: ignore
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+# user answer rate test
+class AnswerRateCreateViewTest(APITestCase):
+    def setUp(self):
+        self.url = reverse('answers:rate_create')
+
+        self.user = get_user_model().objects.create(
+            username="testuser", email="test@example.com", password="testpass"
+        )
+        self.question = Question.objects.create(
+            user=self.user,
+            heading='Question',
+            text='Text',
+        )
+        self.answer = Answer.objects.create(
+            question=self.question,
+            heading='Answer',
+            text='Text',
+        )
+
+        self.create_data = {
+            'answer': self.answer.id,
+            'rate': AnswerRate.RATE_RELEVANT
+        }
+        self.update_data = {
+            'answer': self.answer.id,
+            'rate': AnswerRate.RATE_USEFUL
+        }
+        self.delete_data = {
+            'answer': self.answer.id
+        }
+
+    def test_answer_rate_create_update(self):
+        self.client.force_login(user=self.user)
+        response = self.client.post(self.url, self.create_data) # type: ignore
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.user.answer_rates.filter(answer=self.answer).exists())
+
+        response = self.client.post(self.url, self.update_data) # type: ignore
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(self.user.answer_rates.filter(answer=self.answer)), 1)
+
+    def test_answer_rate_delete(self):
+        self.client.force_login(user=self.user)
+        self.client.post(self.url, self.create_data) # type: ignore
+        response = self.client.delete(self.url, self.delete_data) # type: ignore
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(self.user.answer_rates.filter(answer=self.answer).exists())
+
