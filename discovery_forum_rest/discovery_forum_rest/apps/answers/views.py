@@ -149,29 +149,43 @@ class UserAnswerRateView(generics.RetrieveAPIView):
         return get_object_or_404(AnswerRate, user=user, answer=answer)
 
 # answer rate create
-class AnswerRateCreateView(generics.CreateAPIView):
+class AnswerRateCreateView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
+    http_method_names = ['post', 'delete']
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request):
         user = request.user
 
         rate = int(request.data.get('rate'))
         valid_rates = [x[0] for x in AnswerRate.RATE_CHOICES]
         if not rate in valid_rates:
-            return response.Response(data={"rate": [f"Недопустисое значение \"{rate}\"."]}, status=status.HTTP_400_BAD_REQUEST)
+            return response.Response(data={"rate": [f"Недопустимое значение \"{rate}\"."]}, status=status.HTTP_400_BAD_REQUEST)
 
         answer_id = request.data.get('answer')
         answer = get_object_or_404(Answer, id=answer_id)
+
+        if user == answer.user:
+            return response.Response({'detail': 'Нельзя оценивать свой же ответ.'}, status=status.HTTP_400_BAD_REQUEST)
         
-        if AnswerRate.objects.filter(answer=answer, user=user).exists():
-            answer_rate = AnswerRate.objects.filter(answer=answer, user=user).first()
-            if answer_rate.rate == rate:
-                answer_rate.delete()
-                return response.Response(status=status.HTTP_204_NO_CONTENT)
-            else:
-                answer_rate.rate = rate
-                answer_rate.save()
-                return response.Response(status=status.HTTP_200_OK)
+        if user.answer_rates.filter(answer=answer).exists():
+            answer_rate = user.answer_rates.filter(answer=answer).first()
+            answer_rate.rate = rate
+            answer_rate.save()
+
+            return response.Response(status=status.HTTP_200_OK)
         else:
-            AnswerRate.objects.create(answer=answer, user=user, rate=rate)
+            user.answer_rates.create(answer=answer, rate=rate)
             return response.Response(status=status.HTTP_201_CREATED)
+        
+    def delete(self, request):
+        user = request.user
+        answer_id = request.data.get('answer')
+        answer = get_object_or_404(Answer, id=answer_id)
+
+        if user == answer.user:
+            return response.Response({'detail': 'Нельзя оценивать свой же ответ.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user.answer_rates.filter(answer=answer).exists():
+            user.answer_rates.filter(answer=answer).first().delete()
+        
+        return response.Response(status=status.HTTP_204_NO_CONTENT)

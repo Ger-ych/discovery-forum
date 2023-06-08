@@ -277,12 +277,12 @@ class AnswerSetSolutionViewTest(APITestCase):
         
         response = self.client.post(self.url, {'answer': self.answer.id}) # type: ignore
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('is_solution'), True)
+        self.assertTrue(response.data.get('is_solution'))
         self.assertEqual(response.data.get('is_solution'), Answer.objects.get(id=self.answer.id).is_solution)
 
         response = self.client.post(self.url, {'answer': self.answer.id}) # type: ignore
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('is_solution'), False)
+        self.assertFalse(response.data.get('is_solution'))
         self.assertEqual(response.data.get('is_solution'), Answer.objects.get(id=self.answer.id).is_solution)
 
     def test_answer_set_solution_invalid_answer(self):
