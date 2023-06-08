@@ -14,7 +14,7 @@ from questions.serializers import (
 
 
 # question category list test
-class TestQuestionCategoryListViewTestCase(APITestCase):
+class QuestionCategoryListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:category_list')
 
@@ -26,7 +26,7 @@ class TestQuestionCategoryListViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 # question list test
-class TestQuestionListViewTestCase(APITestCase):
+class QuestionListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:question_list')
 
@@ -55,7 +55,7 @@ class TestQuestionListViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 # user question list test
-class TestUserQuestionListViewTestCase(APITestCase):
+class UserQuestionListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:question_user_list')
 
@@ -94,7 +94,7 @@ class TestUserQuestionListViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 # question comment list test
-class TestQuestionCommentListViewTestCase(APITestCase):
+class QuestionCommentListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:comment_list')
 
@@ -116,7 +116,7 @@ class TestQuestionCommentListViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 # question create test
-class TestQuestionCreateViewTestCase(APITestCase):
+class QuestionCreateViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse("questions:question_create")
 
@@ -148,7 +148,7 @@ class TestQuestionCreateViewTestCase(APITestCase):
         self.assertFalse(Question.objects.exists())
 
 # question detail test
-class TestQuestionDetailViewTestCase(APITestCase):
+class QuestionDetailViewTestCase(APITestCase):
     def setUp(self):
         self.user = get_user_model().objects.create(
             username="testuser", email="test@example.com", password="testpass"
@@ -201,7 +201,7 @@ class TestQuestionDetailViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 # question comment create test
-class TestQuestionCommentCreateViewTestCase(APITestCase):
+class QuestionCommentCreateViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:comment_create')
 
@@ -235,7 +235,7 @@ class TestQuestionCommentCreateViewTestCase(APITestCase):
         self.assertFalse(QuestionComment.objects.exists())
 
 # question comment detail test
-class TestQuestionCommentDetailViewTestCase(APITestCase):
+class QuestionCommentDetailViewTestCase(APITestCase):
     def setUp(self):
         self.user = get_user_model().objects.create(
             username="testuser", email="test@example.com", password="testpass"
@@ -258,7 +258,6 @@ class TestQuestionCommentDetailViewTestCase(APITestCase):
         self.update_data = {'text': 'Updated comment'}
     
     def test_get_comment_detail(self):
-        self.client.force_login(user=self.user)
         response = self.client.get(self.url)
         serializer = QuestionCommentDetailSerializer(instance=self.comment)
 
@@ -286,7 +285,7 @@ class TestQuestionCommentDetailViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 # question follow test
-class TestQuestionFollowViewTest(APITestCase):
+class QuestionFollowViewTest(APITestCase):
     def setUp(self):
         self.url = reverse('questions:question_follow')
 

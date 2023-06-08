@@ -109,7 +109,7 @@ class AnswerSetSolutionView(views.APIView):
     http_method_names = ['post']
 
     def post(self, request):
-        answer_id = request.data.get('answer_id')
+        answer_id = request.data.get('answer')
         answer = get_object_or_404(Answer, id=answer_id)
         question = answer.question
 
@@ -143,7 +143,7 @@ class UserAnswerRateView(generics.RetrieveAPIView):
     def get_object(self):
         user = self.request.user
 
-        answer_id = self.request.GET.get('answer')
+        answer_id = self.request.GET.get('answer_id')
         answer = get_object_or_404(Answer, id=answer_id)
         
         return get_object_or_404(AnswerRate, user=user, answer=answer)
@@ -175,4 +175,3 @@ class AnswerRateCreateView(generics.CreateAPIView):
         else:
             AnswerRate.objects.create(answer=answer, user=user, rate=rate)
             return response.Response(status=status.HTTP_201_CREATED)
-
