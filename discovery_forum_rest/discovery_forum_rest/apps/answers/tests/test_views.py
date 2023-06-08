@@ -344,7 +344,7 @@ class UserAnswerRateViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-# user answer rate test
+# answer rate create test
 class AnswerRateCreateViewTest(APITestCase):
     def setUp(self):
         self.url = reverse('answers:rate_create')
