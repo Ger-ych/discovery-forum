@@ -29,7 +29,8 @@ urlpatterns = [
     path(f'{api_prefix}auth/', include('djoser.urls')),
     path(f'{api_prefix}auth/', include('djoser.urls.authtoken')),
             
-    path(f'{api_prefix}questions/', include('questions.urls')),    
+    path(f'{api_prefix}questions/', include('questions.urls')),
+    path(f'{api_prefix}answers/', include('answers.urls')),
 ]
 if settings.DEBUG:
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

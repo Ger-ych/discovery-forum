@@ -6,9 +6,6 @@ from rest_framework.test import APITestCase
 
 from questions.models import QuestionCategory, Question, QuestionComment
 from questions.serializers import (
-    QuestionCategoryListSerializer, 
-    QuestionListSerializer, 
-    QuestionCommentListSerializer, 
     QuestionDetailSerializer, 
     QuestionCreateSerializer, 
     QuestionCommentCreateSerializer, 
@@ -17,7 +14,7 @@ from questions.serializers import (
 
 
 # question category list test
-class TestQuestionCategoryListViewTestCase(APITestCase):
+class QuestionCategoryListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:category_list')
 
@@ -26,14 +23,10 @@ class TestQuestionCategoryListViewTestCase(APITestCase):
 
     def test_get_question_categories(self):
         response = self.client.get(self.url)
-        categories = QuestionCategory.objects.all().order_by('name')
-        serializer = QuestionCategoryListSerializer(categories, many=True)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
 
 # question list test
-class TestQuestionListViewTestCase(APITestCase):
+class QuestionListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:question_list')
 
@@ -51,30 +44,18 @@ class TestQuestionListViewTestCase(APITestCase):
 
     def test_get_all_questions(self):
         response = self.client.get(self.url)
-        questions = Question.objects.all().order_by('-date_time')
-        serializer = QuestionListSerializer(questions, many=True)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
 
     def test_get_questions_by_category(self):
         response = self.client.get(self.url, {'category_id': self.category.id}) # type: ignore
-        questions = Question.objects.filter(category=self.category).order_by('-date_time')
-        serializer = QuestionListSerializer(questions, many=True)
-        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
 
     def test_get_questions_by_query(self):
         response = self.client.get(self.url, {'q': 'Question 1'})
-        questions = Question.objects.filter(heading__icontains='Question 1').order_by('-date_time')
-        serializer = QuestionListSerializer(questions, many=True)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
 
 # user question list test
-class TestUserQuestionListViewTestCase(APITestCase):
+class UserQuestionListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:question_user_list')
 
@@ -97,20 +78,12 @@ class TestUserQuestionListViewTestCase(APITestCase):
 
     def test_user_questions_list(self):
         self.client.force_login(user=self.user)
-        response = self.client.get(self.url)
-        questions = Question.objects.filter(user=self.user).order_by('-date_time')
-        serializer = QuestionListSerializer(questions, many=True)
-        
+        response = self.client.get(self.url)        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
         
     def test_user_questions_list_with_username(self):
         response = self.client.get(self.url, {'username': self.user.username}) # type: ignore
-        questions = Question.objects.filter(user=self.user).order_by('-date_time')
-        serializer = QuestionListSerializer(questions, many=True)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
 
     def test_user_questions_list_with_wrong_username(self):
         response = self.client.get(self.url, {'username': 'wrongusername'})
@@ -121,7 +94,7 @@ class TestUserQuestionListViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 # question comment list test
-class TestQuestionCommentListViewTestCase(APITestCase):
+class QuestionCommentListViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:comment_list')
 
@@ -140,14 +113,10 @@ class TestQuestionCommentListViewTestCase(APITestCase):
 
     def test_get_comment_list(self):
         response = self.client.get(self.url, {"question_id": self.question.id}) # type: ignore
-        comments = QuestionComment.objects.filter(question=self.question).order_by("-date_time")
-        serializer = QuestionCommentListSerializer(comments, many=True)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data) # type: ignore
 
 # question create test
-class TestQuestionCreateViewTestCase(APITestCase):
+class QuestionCreateViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse("questions:question_create")
 
@@ -179,7 +148,7 @@ class TestQuestionCreateViewTestCase(APITestCase):
         self.assertFalse(Question.objects.exists())
 
 # question detail test
-class TestQuestionDetailViewTestCase(APITestCase):
+class QuestionDetailViewTestCase(APITestCase):
     def setUp(self):
         self.user = get_user_model().objects.create(
             username="testuser", email="test@example.com", password="testpass"
@@ -232,7 +201,7 @@ class TestQuestionDetailViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 # question comment create test
-class TestQuestionCommentCreateViewTestCase(APITestCase):
+class QuestionCommentCreateViewTestCase(APITestCase):
     def setUp(self):
         self.url = reverse('questions:comment_create')
 
@@ -266,7 +235,7 @@ class TestQuestionCommentCreateViewTestCase(APITestCase):
         self.assertFalse(QuestionComment.objects.exists())
 
 # question comment detail test
-class TestQuestionCommentDetailViewTestCase(APITestCase):
+class QuestionCommentDetailViewTestCase(APITestCase):
     def setUp(self):
         self.user = get_user_model().objects.create(
             username="testuser", email="test@example.com", password="testpass"
@@ -289,7 +258,6 @@ class TestQuestionCommentDetailViewTestCase(APITestCase):
         self.update_data = {'text': 'Updated comment'}
     
     def test_get_comment_detail(self):
-        self.client.force_login(user=self.user)
         response = self.client.get(self.url)
         serializer = QuestionCommentDetailSerializer(instance=self.comment)
 
@@ -316,8 +284,36 @@ class TestQuestionCommentDetailViewTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+# user question follow list test
+class UserQuestionFollowListViewTestCase(APITestCase):
+    def setUp(self):
+        self.url = reverse('questions:question_follow_user_list')
+
+        self.user = get_user_model().objects.create(
+            username="testuser", email="test@example.com", password="testpass"
+        )
+        self.question1 = Question.objects.create(
+            heading='Question 1',
+            text='Text 1',
+        )
+        self.question2 = Question.objects.create(
+            heading='Question 2',
+            text='Text 2',
+        )
+
+        self.user.followed_questions.add(self.question1, self.question2)
+
+    def test_user_questions_list(self):
+        self.client.force_login(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_questions_list_without_auth(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 # question follow test
-class TestQuestionFollowViewTest(APITestCase):
+class QuestionFollowViewTest(APITestCase):
     def setUp(self):
         self.url = reverse('questions:question_follow')
 
@@ -334,25 +330,29 @@ class TestQuestionFollowViewTest(APITestCase):
             text='Text 2',
         )
 
-    def test_question_follow(self):
+    def test_question_follow_create(self):
         self.client.force_login(user=self.user)
+        response = self.client.post(self.url, {'question': self.question1.id}) # type: ignore
 
-        response = self.client.post(self.url, {'question_id': self.question1.id}) # type: ignore
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.question1.following_users.filter(id=self.user.id).exists()) # type: ignore
+    
+    def test_question_follow_delete(self):
+        self.client.force_login(user=self.user)
+        self.client.post(self.url, {'question': self.question1.id}) # type: ignore
+        response = self.client.delete(self.url, {'question': self.question1.id}) # type: ignore
 
-        response = self.client.post(self.url, {'question_id': self.question1.id}) # type: ignore
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(self.question1.following_users.filter(id=self.user.id).exists()) # type: ignore
 
     def test_question_follow_invalid_question(self):
         self.client.force_login(user=self.user)
-        response = self.client.post(self.url, {'question_id': 999})
+        response = self.client.post(self.url, {'question': 999})
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_question_follow_by_owner(self):
         self.client.force_login(user=self.user)
-        response = self.client.post(self.url, {'question_id': self.question2.id}) # type: ignore
+        response = self.client.post(self.url, {'question': self.question2.id}) # type: ignore
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -122,22 +122,41 @@ class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
             self.permission_classes = [IsOwner]
         return super().get_permissions()
 
-# question follow view
+# list of user's followed questions
+class UserQuestionFollowListView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = QuestionListSerializer
+
+    def get_queryset(self):
+        return self.request.user.followed_questions.all()
+
+# question follow
 class QuestionFollowView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    http_method_names = ['post']
+    http_method_names = ['post', 'delete']
 
     def post(self, request):
-        question_id = request.data.get('question_id')
+        question_id = request.data.get('question')
         question = get_object_or_404(Question, id=question_id)
         user = request.user
 
         if user == question.user:
             return response.Response({'detail': 'Нельзя отслеживать свой же вопрос.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user.followed_questions.filter(id=question.id).exists(): # # type: ignore
-            user.followed_questions.remove(question)
-            return response.Response(status=status.HTTP_204_NO_CONTENT)
-        else:
+        if not user.followed_questions.filter(id=question.id).exists():
             user.followed_questions.add(question)
-            return response.Response(status=status.HTTP_201_CREATED)
+
+        return response.Response(status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        question_id = request.data.get('question')
+        question = get_object_or_404(Question, id=question_id)
+        user = request.user
+
+        if user == question.user:
+            return response.Response({'detail': 'Нельзя перестать отслеживать свой же вопрос.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user.followed_questions.filter(id=question.id).exists():
+            user.followed_questions.remove(question)
+
+        return response.Response(status=status.HTTP_200_OK)

@@ -26,13 +26,14 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, 'apps'))
 SECRET_KEY = 'django-insecure-6qcc0az!s38ir#&df*1#(tf9ppmo5+qtgehgy0d$#oadg2x$&j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-try:
-    DEBUG = os.environ['DEBUG']
-except KeyError:
+
+DEBUG = os.environ.get('DEBUG')
+if not DEBUG:
     DEBUG = True
 
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -138,13 +139,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['POSTGRES_DB'], 'USER': os.environ['POSTGRES_USER'],
-            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-            'HOST': os.environ['POSTGRES_HOST'], 'PORT': os.environ['POSTGRES_PORT'],
+            'NAME': os.environ.get('POSTGRES_DB'), 'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'), 'PORT': os.environ.get('POSTGRES_PORT'),
         }
     }
-
-
 
 
 # Password validation
@@ -203,5 +202,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
