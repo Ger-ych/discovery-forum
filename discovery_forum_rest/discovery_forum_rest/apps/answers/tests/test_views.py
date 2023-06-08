@@ -344,7 +344,6 @@ class UserAnswerRateViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-
 # user answer rate test
 class AnswerRateCreateViewTest(APITestCase):
     def setUp(self):
@@ -396,3 +395,7 @@ class AnswerRateCreateViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.user.answer_rates.filter(answer=self.answer).exists())
 
+    def test_user_answer_rate_unauthenticated(self):
+        response = self.client.post(self.url, self.create_data) # type: ignore
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
