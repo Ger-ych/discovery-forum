@@ -7,6 +7,7 @@ urlpatterns = [
 
     path('list/', QuestionListView.as_view(), name='question_list'),
     path('list/user/', UserQuestionListView.as_view(), name='question_user_list'),
+    path('list/user/follow/', UserQuestionFollowListView.as_view(), name='question_follow_user_list'),
     path('detail/<int:id>/', QuestionDetailView.as_view(), name='question_detail'),
     path('create/', QuestionCreateView.as_view(), name='question_create'),
     path('follow/', QuestionFollowView.as_view(), name='question_follow'),

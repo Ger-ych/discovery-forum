@@ -122,6 +122,14 @@ class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
             self.permission_classes = [IsOwner]
         return super().get_permissions()
 
+# list of user's followed questions
+class UserQuestionFollowListView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = QuestionListSerializer
+
+    def get_queryset(self):
+        return self.request.user.followed_questions.all()
+
 # question follow
 class QuestionFollowView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
