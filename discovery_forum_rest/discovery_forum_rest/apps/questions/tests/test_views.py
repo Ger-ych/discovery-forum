@@ -284,6 +284,34 @@ class QuestionCommentDetailViewTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+# user question follow list test
+class UserQuestionFollowListViewTestCase(APITestCase):
+    def setUp(self):
+        self.url = reverse('questions:question_follow_user_list')
+
+        self.user = get_user_model().objects.create(
+            username="testuser", email="test@example.com", password="testpass"
+        )
+        self.question1 = Question.objects.create(
+            heading='Question 1',
+            text='Text 1',
+        )
+        self.question2 = Question.objects.create(
+            heading='Question 2',
+            text='Text 2',
+        )
+
+        self.user.followed_questions.add(self.question1, self.question2)
+
+    def test_user_questions_list(self):
+        self.client.force_login(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_questions_list_without_auth(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 # question follow test
 class QuestionFollowViewTest(APITestCase):
     def setUp(self):
@@ -302,25 +330,29 @@ class QuestionFollowViewTest(APITestCase):
             text='Text 2',
         )
 
-    def test_question_follow(self):
+    def test_question_follow_create(self):
         self.client.force_login(user=self.user)
+        response = self.client.post(self.url, {'question': self.question1.id}) # type: ignore
 
-        response = self.client.post(self.url, {'question_id': self.question1.id}) # type: ignore
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.question1.following_users.filter(id=self.user.id).exists()) # type: ignore
+    
+    def test_question_follow_delete(self):
+        self.client.force_login(user=self.user)
+        self.client.post(self.url, {'question': self.question1.id}) # type: ignore
+        response = self.client.delete(self.url, {'question': self.question1.id}) # type: ignore
 
-        response = self.client.post(self.url, {'question_id': self.question1.id}) # type: ignore
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(self.question1.following_users.filter(id=self.user.id).exists()) # type: ignore
 
     def test_question_follow_invalid_question(self):
         self.client.force_login(user=self.user)
-        response = self.client.post(self.url, {'question_id': 999})
+        response = self.client.post(self.url, {'question': 999})
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_question_follow_by_owner(self):
         self.client.force_login(user=self.user)
-        response = self.client.post(self.url, {'question_id': self.question2.id}) # type: ignore
+        response = self.client.post(self.url, {'question': self.question2.id}) # type: ignore
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
