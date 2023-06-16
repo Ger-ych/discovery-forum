@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from questions.models import Question
+
 
 # notification model
 class Notification(models.Model):
@@ -12,7 +14,12 @@ class Notification(models.Model):
     )
     heading = models.CharField(verbose_name="Заголовок", max_length=255)
     text = models.TextField(verbose_name="Текст")
-    link = models.TextField(verbose_name="Ссылка", null=True, blank=True)
+    question = models.ForeignKey(
+        Question,
+        related_name='question_notifications',
+        verbose_name='Вопрос',
+        on_delete=models.CASCADE,
+    )
     is_read = models.BooleanField(default=False, verbose_name="Прочитано")
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
     

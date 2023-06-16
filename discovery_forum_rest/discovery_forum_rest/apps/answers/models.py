@@ -4,6 +4,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
 from questions.models import Question
+from notifications.models import Notification
+
 from .utils import calc_answer_rating
 
 
@@ -35,6 +37,28 @@ class Answer(models.Model):
     class Meta:
         verbose_name = 'Ответ'
         verbose_name_plural = 'Ответы'
+
+# creating a notification to the user when creating an answer to a question
+@receiver(post_save, sender=Answer)
+def answer_notification(sender, instance, created, **kwargs):
+    if created:
+        heading = "Новый ответ на вопрос!"
+        text = f"Новый ответ на вопрос \"{instance.question.heading}\""
+        question = instance.question
+
+        Notification.objects.create(
+            user=instance.question.user,
+            heading=heading,
+            text=text,
+            question=question
+        )
+        for u in instance.question.following_users.all():
+            Notification.objects.create(
+                user=u,
+                heading=heading,
+                text=text,
+                question=question
+            )
 
 # answer comment model
 class AnswerComment(models.Model):

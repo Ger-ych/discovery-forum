@@ -5,12 +5,12 @@ from .models import Notification
 # registration of notification model in administration
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "heading", "is_read", "date_time")
+    list_display = ("id", "user", "heading", "question", "is_read", "date_time")
 
     fieldsets = (
         (None, {'fields': ('id', 'user', 'date_time', 'is_read')}),
         (None, {
-            'fields': ('heading', 'text', 'link'),
+            'fields': ('heading', 'text', 'question'),
         }),
     )
 
