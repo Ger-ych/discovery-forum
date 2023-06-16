@@ -31,6 +31,7 @@ urlpatterns = [
             
     path(f'{api_prefix}questions/', include('questions.urls')),
     path(f'{api_prefix}answers/', include('answers.urls')),
+    path(f'{api_prefix}notifications/', include('notifications.urls')),
 ]
 if settings.DEBUG:
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
