@@ -105,10 +105,15 @@ def answer_comment_notification(sender, instance, created, **kwargs):
     # creating a notification to the user when there is a new comment on a answer
     if created:
         if instance.user != instance.answer.user:
+            if instance.user:
+                text = f"Новый комментарий от пользователя {instance.user.username} к вашему ответу \"{instance.answer.heading}\" по вопросу \"{instance.answer.question.heading}\": {instance.text}"
+            else:
+                text = f"Новый комментарий к вашему ответу \"{instance.answer.heading}\" по вопросу \"{instance.answer.question.heading}\": {instance.text}"
+
             Notification.objects.create(
                 user=instance.answer.user,
-                heading=f"Новый комментарий к ответу!",
-                text=f"Новый комментарий к вашему ответу \"{instance.answer.heading}\" по вопросу \"{instance.answer.question.heading}\": {instance.text}",
+                heading=f"Новый комментарий к вашему ответу!",
+                text=text,
                 question=instance.answer.question
             )
 

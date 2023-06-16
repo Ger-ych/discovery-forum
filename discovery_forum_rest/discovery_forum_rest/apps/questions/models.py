@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
 
 # question category model
 class QuestionCategory(models.Model):
@@ -74,3 +77,22 @@ class QuestionComment(models.Model):
     class Meta:
         verbose_name = 'Комментарий к вопросу'
         verbose_name_plural = 'Комментарии к вопросам'
+
+@receiver(post_save, sender=QuestionComment)
+def question_comment_notification(sender, instance, created, **kwargs):
+    from notifications.models import Notification
+
+    # creating a notification to the user when there is a new comment on a question
+    if created:
+        if instance.user != instance.question.user:
+            if instance.user:
+                text = f"Новый комментарий от пользователя {instance.user.username} к вашему вопросу \"{instance.question.heading}\": {instance.text}"
+            else:
+                text = f"Новый комментарий к вашему вопросу \"{instance.question.heading}\": {instance.text}"
+
+            Notification.objects.create(
+                user=instance.question.user,
+                heading=f"Новый комментарий к вашему вопросу!",
+                text=text,
+                question=instance.question
+            )
