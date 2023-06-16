@@ -100,6 +100,18 @@ class AnswerComment(models.Model):
         verbose_name = 'Комментарий к ответу'
         verbose_name_plural = 'Комментарии к ответу'
 
+@receiver(post_save, sender=AnswerComment)
+def answer_comment_notification(sender, instance, created, **kwargs):
+    # creating a notification to the user when there is a new comment on a answer
+    if created:
+        if instance.user != instance.answer.user:
+            Notification.objects.create(
+                user=instance.answer.user,
+                heading=f"Новый комментарий к ответу!",
+                text=f"Новый комментарий к вашему ответу \"{instance.answer.heading}\" по вопросу \"{instance.answer.question.heading}\": {instance.text}",
+                question=instance.answer.question
+            )
+
 # answer rate model
 class AnswerRate(models.Model):
     # answer rate choices
