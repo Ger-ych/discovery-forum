@@ -28,6 +28,7 @@ class Answer(models.Model):
     heading = models.CharField(verbose_name="Заголовок", max_length=255)
     text = models.TextField(verbose_name="Текст")
     is_solution = models.BooleanField(default=False, verbose_name="Решение вопроса")
+    was_solution = models.BooleanField(default=False)
     date_time = models.DateTimeField(verbose_name='Время создания', auto_now_add=True, auto_created=True, null=True, blank=True)
     rating = models.IntegerField(verbose_name='Рейтинг', default=0)
     
@@ -38,9 +39,9 @@ class Answer(models.Model):
         verbose_name = 'Ответ'
         verbose_name_plural = 'Ответы'
 
-# creating a notification to the user when creating an answer to a question
 @receiver(post_save, sender=Answer)
 def answer_notification(sender, instance, created, **kwargs):
+    # creating a notification to the user when creating an answer to a question
     if created:
         heading = "Новый ответ на вопрос!"
         text = f"Новый ответ на вопрос \"{instance.question.heading}\""
@@ -59,6 +60,19 @@ def answer_notification(sender, instance, created, **kwargs):
                 text=text,
                 question=question
             )
+    
+    # creating a notification to the user when his answer is marked as a solution
+    if instance.is_solution != instance.was_solution:
+        if instance.is_solution:
+            Notification.objects.create(
+                user=instance.user,
+                heading="Ваш ответ помечен, как решение!",
+                text=f"Ваш ответ \"{instance.heading}\" на вопрос \"{instance.question.heading}\" помечен, как решение.",
+                question=instance.question
+            )
+
+        instance.was_solution = instance.is_solution
+        instance.save()
 
 # answer comment model
 class AnswerComment(models.Model):
