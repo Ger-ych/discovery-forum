@@ -84,7 +84,7 @@ def question_comment_notification(sender, instance, created, **kwargs):
 
     # creating a notification to the user when there is a new comment on a question
     if created:
-        if instance.user != instance.question.user:
+        if instance.user != instance.question.user and instance.question.user:
             if instance.user:
                 text = f"Новый комментарий от пользователя {instance.user.username} к вашему вопросу \"{instance.question.heading}\": {instance.text}"
             else:

@@ -44,26 +44,28 @@ def answer_notification(sender, instance, created, **kwargs):
     # creating a notification to the user when creating an answer to a question
     if created:
         heading = "Новый ответ на вопрос!"
-        text = f"Новый ответ на вопрос \"{instance.question.heading}\""
+        text = f"Новый ответ на вопрос \"{instance.question.heading}\": {instance.heading}"
         question = instance.question
 
-        Notification.objects.create(
-            user=instance.question.user,
-            heading=heading,
-            text=text,
-            question=question
-        )
-        for u in instance.question.following_users.all():
+        if instance.question.user and instance.user != instance.question.user:
             Notification.objects.create(
-                user=u,
+                user=instance.question.user,
                 heading=heading,
                 text=text,
                 question=question
             )
+        for u in instance.question.following_users.all():
+            if u != instance.user:
+                Notification.objects.create(
+                    user=u,
+                    heading=heading,
+                    text=text,
+                    question=question
+                )
     
     # creating a notification to the user when his answer is marked as a solution
     if instance.is_solution != instance.was_solution:
-        if instance.is_solution:
+        if instance.is_solution and instance.user:
             Notification.objects.create(
                 user=instance.user,
                 heading="Ваш ответ помечен, как решение!",
@@ -104,7 +106,7 @@ class AnswerComment(models.Model):
 def answer_comment_notification(sender, instance, created, **kwargs):
     # creating a notification to the user when there is a new comment on a answer
     if created:
-        if instance.user != instance.answer.user:
+        if instance.user != instance.answer.user and instance.answer.user:
             if instance.user:
                 text = f"Новый комментарий от пользователя {instance.user.username} к вашему ответу \"{instance.answer.heading}\" по вопросу \"{instance.answer.question.heading}\": {instance.text}"
             else:
