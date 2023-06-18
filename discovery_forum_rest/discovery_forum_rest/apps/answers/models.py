@@ -65,7 +65,7 @@ def answer_notification(sender, instance, created, **kwargs):
     
     # creating a notification to the user when his answer is marked as a solution
     if instance.is_solution != instance.was_solution:
-        if instance.is_solution and instance.user:
+        if instance.is_solution and instance.user and instance.user != instance.question.user:
             Notification.objects.create(
                 user=instance.user,
                 heading="Ваш ответ помечен, как решение!",
