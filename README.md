@@ -88,3 +88,24 @@ TODO
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+### Вход
+
+#### `POST /api/v1/auth/token/login/`
+
+Запрос:
+```json
+{
+  "username": "<Имя пользователя>",
+  "password": "<Пароль>"
+}
+```
+
+Ответ:
+```json
+{
+  "auth_token": "<Токен авторизации (AUTH TOKEN)>"
+}
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
