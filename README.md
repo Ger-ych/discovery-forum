@@ -24,13 +24,7 @@
       <a href="#разворачивание-проекта">Разворачивание проекта</a>
     </li>
     <li>
-        <a href="#документация-к-rest-api">Документация к REST API</a>
-        <ul>
-            <li><a href="#авторизация">Авторизация</a></li>
-            <li><a href="#вопросы">Вопросы</a></li>
-            <li><a href="#ответы">Ответы</a></li>
-            <li><a href="#уведомления">Уведомления</a></li>
-        </ul>
+      <a href="#документация-к-rest-api">Документация к REST API</a>
     </li>
   </ol>
 </details>
@@ -59,7 +53,7 @@ TODO
 
 Для авторизации в заголовке Authorization необходимо передавать ваш AUTH TOKEN:
 
-`Authorization: Token <AUTH TOKEN>`
+```Authorization: Token <AUTH TOKEN>```
 
 Запрос может завершиться с ошибкой. Пример ответа с ошибкой:
 
@@ -71,9 +65,9 @@ TODO
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<div id="авторизация"></div>
+### Регистрация
 
-### Регистрация `/api/v1/auth/users/`
+#### `POST /api/v1/auth/users/`
 
 Запрос:
 ```json
