@@ -71,23 +71,23 @@ TODO
 
 Создание новой учётной записи.
 
-Запрос:
-```json
+#### Запрос:
+```json5
 {
-  "email": "<Email>",
-  "username": "<Имя пользователя>",
-  "password": "<Пароль>"
+  "email": <Email> (str),
+  "username": <Имя пользователя> (str),
+  "password": <Пароль> (str)
 }
 ```
 
-Ответ:
-```json
+#### Ответ:
+```json5
 201 Created
 
 {
-  "email": "<Email>",
-  "username": "<Имя пользователя>",
-  "id": "<ID пользователя>"
+  "email": <Email> (str),
+  "username": <Имя пользователя> (str),
+  "id": <ID пользователя> (int)
 }
 ```
 
@@ -99,20 +99,20 @@ TODO
 
 Получение токена авторизации (AUTH TOKEN).
 
-Запрос:
-```json
+#### Запрос:
+```json5
 {
-  "username": "<Имя пользователя>",
-  "password": "<Пароль>"
+  "username": <Имя пользователя> (str),
+  "password": <Пароль> (str)
 }
 ```
 
-Ответ:
-```json
+#### Ответ:
+```json5
 200 OK
 
 {
-  "auth_token": "<Токен авторизации (AUTH TOKEN)>"
+  "auth_token": <Токен авторизации (AUTH TOKEN)> (str)
 }
 ```
 
@@ -120,22 +120,13 @@ TODO
 
 ### Выход
 
-#### `POST /api/v1/auth/token/login/`
-
-#### Требуется авторизация
+#### `POST /api/v1/auth/token/login/` `Требуется авторизация`
 
 Удаление текущего токена авторизации (AUTH TOKEN).
 
-Запрос:
-```json
-{}
-```
-
-Ответ:
-```json
+#### Ответ:
+```json5
 204 No Content
-
-{}
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
