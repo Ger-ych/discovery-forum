@@ -80,6 +80,8 @@ TODO
 
 Ответ:
 ```json
+201 Created
+
 {
   "email": "<Email>",
   "username": "<Имя пользователя>",
@@ -103,9 +105,31 @@ TODO
 
 Ответ:
 ```json
+200 OK
+
 {
   "auth_token": "<Токен авторизации (AUTH TOKEN)>"
 }
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Выход
+
+#### `POST /api/v1/auth/token/login/`
+
+#### Требуется авторизация
+
+Запрос:
+```json
+{}
+```
+
+Ответ:
+```json
+204 No Content
+
+{}
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
