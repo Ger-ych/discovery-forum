@@ -26,9 +26,10 @@
     <li>
         <a href="#документация-к-rest-api">Документация к REST API</a>
         <ul>
-            <li><a href="#api-вопросы">Вопросы</a></li>
-            <li><a href="#api-ответы">Ответы</a></li>
-            <li><a href="#api-уведомления">Уведомления</a></li>
+            <li><a href="#авторизация">Авторизация</a></li>
+            <li><a href="#вопросы">Вопросы</a></li>
+            <li><a href="#ответы">Ответы</a></li>
+            <li><a href="#уведомления">Уведомления</a></li>
         </ul>
     </li>
   </ol>
@@ -54,6 +55,42 @@ TODO
 <!-- REST API DOCUMENTATION -->
 ## Документация к REST API
 
-TODO
+Для того, чтобы обратиться к некоторым методам, вы должны быть авторизованы.
+
+Для авторизации в заголовке Authorization необходимо передавать ваш AUTH TOKEN:
+
+`Authorization: Token <AUTH TOKEN>`
+
+Запрос может завершиться с ошибкой. Пример ответа с ошибкой:
+
+```json
+{
+  "detail": "<Сообщение>"
+}
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<div id="авторизация"></div>
+
+### Регистрация `/api/v1/auth/users/`
+
+Запрос:
+```json
+{
+  "email": "<Email>",
+  "username": "<Имя пользователя>",
+  "password": "<Пароль>"
+}
+```
+
+Ответ:
+```json
+{
+  "email": "<Email>",
+  "username": "<Имя пользователя>",
+  "id": "<ID пользователя>"
+}
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
