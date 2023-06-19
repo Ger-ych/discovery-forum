@@ -20,6 +20,7 @@ from .permissions import IsOwner
 class QuestionCategoryListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny, )
     serializer_class = QuestionCategoryListSerializer
+    pagination_class = None
     queryset = QuestionCategory.objects.all().order_by('name')
 
 # list of questions
