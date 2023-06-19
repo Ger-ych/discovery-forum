@@ -69,6 +69,8 @@ TODO
 
 #### `POST /api/v1/auth/users/`
 
+Создание новой учётной записи.
+
 Запрос:
 ```json
 {
@@ -95,6 +97,8 @@ TODO
 
 #### `POST /api/v1/auth/token/login/`
 
+Получение токена авторизации (AUTH TOKEN).
+
 Запрос:
 ```json
 {
@@ -119,6 +123,8 @@ TODO
 #### `POST /api/v1/auth/token/login/`
 
 #### Требуется авторизация
+
+Удаление текущего токена авторизации (AUTH TOKEN).
 
 Запрос:
 ```json
