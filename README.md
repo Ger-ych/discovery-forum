@@ -5,7 +5,7 @@
 <br />
 <div align="center">
 
-  <h3 align="center">DiscoveryForum</h3>
+  <h2 align="center">DiscoveryForum</h2>
 
   <p align="center">
     Онлайн-площадка.
