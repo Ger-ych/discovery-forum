@@ -120,7 +120,7 @@ TODO
 
 ### Выход
 
-#### `POST /api/v1/auth/token/login/` `Требуется авторизация`
+#### `POST /api/v1/auth/token/logout/` `Требуется авторизация`
 
 Удаление текущего токена авторизации (AUTH TOKEN).
 
